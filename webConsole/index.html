@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, maximum-scale=1.0">
+    <title>Esp32Car-WebConsole</title>
+    <script src="./js/mqtt.js"></script>
+    <script type="text/javascript" src="./js/vue.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="./css/input.css">
+</head>
+
+<style>
+    * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
+
+    <div id="app" align=center>
+        <template>
+            <div class="inputBox">
+                <input type="text" v-model="camvalue" required="required">
+                <span>ESP32-CAM地址</span>
+            </div>
+            <button class="ad"  @click="setcamsrc">提交</button>
+
+            <div align=center id="cam">
+                <img width="100%" :src="camsrc" alt="esp32cam实时摄像头" />
+            </div>
+
+            <div class="inputBox">
+                <input type="number" v-model.number="lightvalue" :max='100' :min='0' required="required">
+                <span>灯光亮度 0~100%</span>
+            </div>
+            <button @click="setLight">提交</button>
+
+            <div class="inputBox">
+                <input type="number" v-model.number="speedvalue" :max='100' :min='0' required="required">
+                <span>速度调节 0~100%</span>
+            </div>
+            <button @click="setSpeed">提交</button>
+
+            <button class="shiny" id="forward" v-on:mousedown="forward" v-on:touchstart="forward" v-on:mouseup="stop"
+                v-on:touchend="stop">前进 ↑</button>
+            <button class="shiny" id="left" v-on:mousedown="left" v-on:mouseup="stop" v-on:touchstart="left"
+                v-on:touchend="stop" style="display: inline-block;">← 左转</button>
+            <button class="shiny" id="right" v-on:mousedown="right" v-on:mouseup="stop" v-on:touchstart="right"
+                v-on:touchend="stop" style="display: inline-block;">右转 →</button>
+            <button class="shiny" id="back" v-on:mousedown="back" v-on:touchstart="back" v-on:touchend="stop"
+                v-on:mouseup="stop">后退 ↓</button>
+
+        </template>
+    </div>
+    </template>
+</body>
+<script>
+    const myVue = new Vue({
+        el: '#app',
+        data: {
+            lightvalue: "50",
+            speedvalue: "55",
+            camsrc : "https://img.techfens.com/i/static/kongbai.jpg",
+            camvalue: "",
+            ledDevice: {
+                status: 0,
+                client: null,
+                options: {
+                    url: 'ws://150.158.214.32:8083/mqtt',
+                    topic: 'carctl',
+                    connectTimeout: 5000,
+                    clientId: 'connect_all_esp32_mqtt_led_' + new Date().getTime(),
+                    clean: false,
+                    keepAliveInterval: 30
+                },
+            },
+        },
+        watch: {
+            speedvalue: {
+                immediate: 512,
+                handler(newValue, oldValue) {
+                    console.log("监听isHot:", newValue, oldValue);
+                }
+
+            }
+        },
+        methods: {
+            forward() {
+                let status = "forward";
+                this.mqttPublish(status);
+            },
+            stop() {
+                let status = "stop";
+                this.mqttPublish(status);
+            },
+            back() {
+                let status = "back";
+                this.mqttPublish(status);
+            },
+            left() {
+                let status = "left";
+                this.mqttPublish(status);
+            },
+            right() {
+                let status = "right";
+                this.mqttPublish(status);
+            },
+            setLight() {
+                console.log("set light");
+                console.log(this.lightvalue)
+                let status = '{"lightvalue": ' + this.lightvalue + '}'
+                console.log(status)
+                this.mqttPublish(status);
+                alert("确认提交亮度为：" + this.lightvalue + "%");
+            },
+            setSpeed() {
+                console.log("set speed");
+                console.log(this.speedvalue)
+                let status = '{"speedvalue": ' + this.speedvalue + '}'
+                console.log(status)
+                this.mqttPublish(status);
+                alert("确认提交速度为：" + this.speedvalue + "%");
+            },
+            
+            setcamsrc(){
+                console.log("set cam");
+                console.log(this.camvalue);
+                this.camsrc = this.camvalue;
+            },
+
+            /**
+             * 发送消息
+             */
+            mqttPublish(status) {
+                // 向指定topic发送消息，topic要保持一致
+                this.ledDevice.client.publish(this.ledDevice.options.topic, status.toString(), {
+                    qos: 1
+                });
+            },
+            /**
+             * mqtt初始化
+             */
+            mqttConf() {
+                // 链接mqtt
+                this.ledDevice.client = mqtt.connect(this.ledDevice.options.url, this.ledDevice.options);
+
+            }
+        },
+        mounted() {
+            this.mqttConf();
+        },
+    });
+
+</script>
+
+</html>

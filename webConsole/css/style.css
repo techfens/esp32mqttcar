@@ -1,0 +1,79 @@
+body {
+    /* background-color: #313131; */
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    /* align-items: center; */
+    height: 100vh;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+}
+
+button {
+  /* display: inline; */
+  position: relative;
+  top: 0;
+  border: 0;
+  cursor: pointer;
+  background: #9ccc65;
+  color: white;
+  border-radius: 3px;
+  line-height: 1;
+  font-size: 20px;
+  padding: 15px 25px;
+  outline: 0;
+  margin: 20px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+button.shiny {
+    display: flex;
+    background: #007eaf;
+    background: linear-gradient(90deg, #2284fb 50%, #0a0e92 60%, #2e59d4 70%);
+    background-size: 600% 100%;
+    -webkit-animation: shine 200s infinite;
+    animation: shine 20s infinite;
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+}
+button.shinydarken {
+  background: #9ccc65;
+  background: linear-gradient(-45deg, #9ccc65 50%, #699833 60%, #9ccc65 70%);
+  background-size: 600% 100%;
+  -webkit-animation: shine 20s infinite;
+          animation: shine 20s infinite;
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+
+}
+button:active {
+  top: 2px;
+}
+
+@-webkit-keyframes shine {
+  0% {
+    background-position-x: 400%;
+  }
+  50% {
+    background-position-x: 0%;
+  }
+  100% {
+    background-position-x: -400%;
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position-x: 400%;
+  }
+  50% {
+    background-position-x: 0%;
+  }
+  100% {
+    background-position-x: -400%;
+  }
+}

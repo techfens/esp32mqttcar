@@ -1,0 +1,49 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.main {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.imgDiv {
+	flex: 2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-top: 20px;
+}
+
+.img:active {
+	margin-top: 15px;
+}
+
+img {
+	width: 400px;
+	height: 400px;
+}
+
+.desc {
+	margin-top: 20px;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.descText {
+	font-size: 60px;
+}
+
+.bottomDesc {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	margin-bottom: 50px;
+	font-size: 20px;
+	text-decoration: underline;
+}
